@@ -24,9 +24,7 @@ private:
 public:
     Engine(const Config& cfg);
 
-    // Q1, Q2, Q3 entry point
     std::vector<StrategyResult> run_tournament();
 
-    // Q4, Q5 entry point
     std::vector<std::vector<StrategyResult>> run_evolution();
 };

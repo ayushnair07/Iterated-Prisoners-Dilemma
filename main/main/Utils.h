@@ -3,7 +3,7 @@
 #define UTILS_H
 
 #include <tuple>
-#include "Types.h" 
+#include "common.h"
 #include <utility>
 
 // Returns the payoff for both players given their moves

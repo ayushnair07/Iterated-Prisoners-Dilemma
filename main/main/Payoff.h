@@ -22,4 +22,4 @@ struct Payoff {
     }
 };
 
-#endif // PAYOFF_H
+#endif

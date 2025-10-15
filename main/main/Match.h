@@ -1,13 +1,13 @@
 #ifndef MATCH_H
 #define MATCH_H
 
-#include "Player.h" // we'll write Player inline below to avoid circular pain
+#include "Player.h" 
 #include "Payoff.h"
 #include <random>
 #include <vector>
 #include <memory>
 
-// Minimal Player wrapper (holds a Strategy instance and histories)
+
 struct LPlayer {
     std::unique_ptr<Strategy> strat;
     std::vector<Move> my, opp;
@@ -17,7 +17,6 @@ struct LPlayer {
     std::string name() const { return strat->name(); }
 };
 
-// Plays one match between two players for L rounds with noise epsilon
 struct Match {
     LPlayer& A, & B;
     int rounds;
@@ -44,4 +43,4 @@ struct Match {
     }
 };
 
-#endif // MATCH_H
+#endif// MATCH_H

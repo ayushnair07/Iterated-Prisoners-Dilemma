@@ -1,9 +1,15 @@
-// Engine.cpp
 #include "Engine.h"
 #include <iostream>
+#include <vector>
+#include <string>
 #include <map>
+#include <algorithm>
+#include <cmath>
 
-void set_global_seed(unsigned int seed); // From Strategies.cpp
+using namespace std;
+
+// Forward declaration for the function defined in Strategies.cpp
+void set_global_seed(unsigned int seed);
 
 Engine::Engine(const Config& cfg) : config(cfg) {
     set_global_seed(config.seed);
@@ -14,10 +20,10 @@ Engine::Engine(const Config& cfg) : config(cfg) {
 }
 
 // Runs a single match for L rounds with noise
-std::pair<double, double> run_match(Strategy& p1, Strategy& p2, int rounds, double epsilon, const PayoffMatrix<double>& payoffs) {
+pair<double, double> run_match(Strategy& p1, Strategy& p2, int rounds, double epsilon, const PayoffMatrix<double>& payoffs) {
     History p1_hist, p2_hist;
     double p1_score = 0.0, p2_score = 0.0;
-    std::uniform_real_distribution<double> dist(0.0, 1.0);
+    uniform_real_distribution<double> dist(0.0, 1.0);
 
     p1.reset();
     p2.reset();
@@ -39,8 +45,8 @@ std::pair<double, double> run_match(Strategy& p1, Strategy& p2, int rounds, doub
     return { p1_score, p2_score };
 }
 
-std::vector<StrategyResult> Engine::run_tournament() {
-    std::map<std::string, std::vector<double>> all_scores;
+vector<StrategyResult> Engine::run_tournament() {
+    map<string, vector<double>> all_scores;
     for (const auto& s : strategy_pool) {
         all_scores[s->name()] = {};
     }
@@ -64,7 +70,7 @@ std::vector<StrategyResult> Engine::run_tournament() {
         }
     }
 
-    std::vector<StrategyResult> results;
+    vector<StrategyResult> results;
     for (const auto& s : strategy_pool) {
         results.push_back(StrategyResult::compute(s->name(), all_scores[s->name()]));
     }
@@ -72,7 +78,7 @@ std::vector<StrategyResult> Engine::run_tournament() {
 }
 
 // Helper for Q5: Strategic Complexity Budget
-double get_scb_cost(const std::string& name) {
+double get_scb_cost(const string& name) {
     if (name == "ALLC" || name == "ALLD" || name.rfind("RND", 0) == 0) return 1.0;
     if (name == "TFT" || name == "GRIM" || name == "SUS_TFT") return 2.0;
     if (name == "PAVLOV" || name == "CONTRITE" || name == "ADAPT_PUNISH") return 3.0;
@@ -80,18 +86,18 @@ double get_scb_cost(const std::string& name) {
     return 0.0;
 }
 
-std::vector<std::vector<StrategyResult>> Engine::run_evolution() {
-    std::vector<std::vector<StrategyResult>> evolution_history;
+vector<vector<StrategyResult>> Engine::run_evolution() {
+    vector<vector<StrategyResult>> evolution_history;
 
     // 1. Initialize Population
-    std::vector<int> current_population(strategy_pool.size());
+    vector<int> current_population(strategy_pool.size());
     for (size_t i = 0; i < strategy_pool.size(); ++i) {
         current_population[i] = config.population / strategy_pool.size();
     }
 
     for (int gen = 0; gen < config.generations; ++gen) {
-        // 2. Calculate Fitness (run a tournament)
-        std::map<std::string, double> total_scores;
+        // 2. Calculate Fitness
+        map<string, double> total_scores;
         for (const auto& s : strategy_pool) total_scores[s->name()] = 0.0;
 
         for (size_t i = 0; i < strategy_pool.size(); ++i) {
@@ -113,7 +119,7 @@ std::vector<std::vector<StrategyResult>> Engine::run_evolution() {
         }
 
         // Log current generation's state
-        std::vector<StrategyResult> gen_results;
+        vector<StrategyResult> gen_results;
         double total_fitness = 0;
         for (size_t i = 0; i < strategy_pool.size(); ++i) {
             if (current_population[i] == 0) continue;
@@ -127,16 +133,16 @@ std::vector<std::vector<StrategyResult>> Engine::run_evolution() {
         }
         evolution_history.push_back(gen_results);
 
-        if (total_fitness <= 0) break; // End if population dies out
+        if (total_fitness <= 0) break;
 
-        // 3. Selection (Replicator Dynamics)
-        std::vector<int> next_population(strategy_pool.size(), 0);
+        // 3. Selection
+        vector<int> next_population(strategy_pool.size(), 0);
         int reproduced_count = 0;
         for (const auto& res : gen_results) {
             double proportion = (res.mean_score * res.population) / total_fitness;
             int num_offspring = static_cast<int>(round(proportion * config.population));
-            auto it = std::find_if(strategy_pool.begin(), strategy_pool.end(), [&](const auto& s) { return s->name() == res.name; });
-            size_t idx = std::distance(strategy_pool.begin(), it);
+            auto it = find_if(strategy_pool.begin(), strategy_pool.end(), [&](const auto& s) { return s->name() == res.name; });
+            size_t idx = distance(strategy_pool.begin(), it);
             next_population[idx] = num_offspring;
             reproduced_count += num_offspring;
         }
@@ -155,10 +161,9 @@ std::vector<std::vector<StrategyResult>> Engine::run_evolution() {
         }
 
         // 4. Mutation
-        std::uniform_real_distribution<double> mut_dist(0.0, 1.0);
+        uniform_real_distribution<double> mut_dist(0.0, 1.0);
         for (int i = 0; i < config.population; ++i) {
             if (mut_dist(rng) < config.mutation) {
-                // Find which strategy this individual is
                 int count = 0;
                 size_t current_idx = 0;
                 for (size_t k = 0; k < next_population.size(); ++k) {

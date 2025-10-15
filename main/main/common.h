@@ -12,11 +12,10 @@
 #include <iomanip>
 #include <random>
 
-// A clear enum for moves.
+
 enum class Move { C, D };
 
-// A struct for the payoff matrix, making it easy to pass around.
-// Using a template for the score type fulfills that requirement.
+
 template<typename T>
 struct PayoffMatrix {
     T T_temptation = 5.0;
@@ -37,12 +36,10 @@ struct PayoffMatrix {
         if (p1_move == Move::C && p2_move == Move::C) return { R_reward, R_reward };
         if (p1_move == Move::C && p2_move == Move::D)   return { S_sucker, T_temptation };
         if (p1_move == Move::D && p2_move == Move::C) return { T_temptation, S_sucker };
-        // Both must have defected
         return { P_punishment, P_punishment };
     }
 };
 
-// Struct to hold final statistics for the leaderboard.
 struct StrategyResult {
     std::string name;
     double mean_score = 0.0;
@@ -51,7 +48,6 @@ struct StrategyResult {
     double ci_upper = 0.0;
     int population = 0; // For evolutionary results
 
-    // Static function to compute stats from a vector of scores.
     static StrategyResult compute(const std::string& name, const std::vector<double>& scores) {
         StrategyResult res;
         res.name = name;
