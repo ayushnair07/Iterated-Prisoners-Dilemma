@@ -23,7 +23,7 @@ struct PayoffMatrix {
     T P_punishment = 1.0;
     T S_sucker = 0.0;
 
-    void validate() const {
+    void Validate() const {
         if (!(T_temptation > R_reward && R_reward > P_punishment && P_punishment > S_sucker)) {
             throw std::runtime_error("Payoff values violate T > R > P > S inequality.");
         }
@@ -32,7 +32,7 @@ struct PayoffMatrix {
         }
     }
 
-    std::pair<T, T> get_scores(Move p1_move, Move p2_move) const {
+    std::pair<T, T> Get_Scores(Move p1_move, Move p2_move) const {
         if (p1_move == Move::C && p2_move == Move::C) return { R_reward, R_reward };
         if (p1_move == Move::C && p2_move == Move::D)   return { S_sucker, T_temptation };
         if (p1_move == Move::D && p2_move == Move::C) return { T_temptation, S_sucker };
@@ -46,8 +46,7 @@ struct StrategyResult {
     double stdev = 0.0;
     double ci_lower = 0.0;
     double ci_upper = 0.0;
-    int population = 0; // For evolutionary results
-
+    int population = 0; 
     static StrategyResult compute(const std::string& name, const std::vector<double>& scores) {
         StrategyResult res;
         res.name = name;

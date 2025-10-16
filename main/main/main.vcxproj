@@ -135,7 +135,6 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Strategies.h" />
     <ClInclude Include="Strategy.h" />
-    <ClInclude Include="Tournament.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

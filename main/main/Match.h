@@ -27,7 +27,7 @@ struct Match {
     Match(LPlayer& a, LPlayer& b, int r, double e, const Payoff& p, uint64_t seed)
         : A(a), B(b), rounds(r), epsilon(e), pf(p), rng(seed), uni(0.0, 1.0) {
     }
-    void play() {
+    void Play() {
         A.reset_for_match(); B.reset_for_match();
         for (int i = 0; i < rounds; ++i) {
             Move mA = A.strat->decide(A.my, A.opp);

@@ -1,4 +1,4 @@
-#include "Strategy.h" // Includes common.h
+#include "Strategy.h"
 #include <sstream>
 #include <stdexcept>
 #include <cctype>
@@ -6,13 +6,11 @@
 
 using namespace std;
 
-// --- Utility: Random number generation ---
 mt19937 rng(random_device{}());
 void set_global_seed(unsigned int seed) {
     rng.seed(seed);
 }
 
-// --- Standard Strategy Implementations ---
 
 class ALLC : public Strategy {
 public:
@@ -142,7 +140,7 @@ public:
 };
 
 
-unique_ptr<Strategy> createStrategy(const string& name) {
+unique_ptr<Strategy> CreateStrategy(const string& name) {
     string upper_name = name;
     transform(upper_name.begin(), upper_name.end(), upper_name.begin(), ::toupper);
 

@@ -14,7 +14,7 @@ struct Payoff {
         if (a == Move::D && b == Move::C) return { T,S };
         return { P,P };
     }
-    bool validate(bool warn = true) const {
+    bool Validate(bool warn = true) const {
         bool ok = (T > R && R > P && P > S);
         if (!ok && warn) std::cerr << "Warning: payoffs do not satisfy T>R>P>S\n";
         if (!(2 * R > T + S) && warn) std::cerr << "Warning: 2R > T+S violated (cooperation may not be stable)\n";

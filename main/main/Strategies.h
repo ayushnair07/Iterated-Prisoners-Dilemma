@@ -15,4 +15,4 @@ class PROBER : public Strategy { /* ... */ };
 
 // Two Original Strategies
 class SuspiciousTFT : public Strategy { /* ... */ };
-class AdaptivePunisher : public Strategy { /* ... */ };
+class ALTERNATE : public Strategy { /* ... */ };

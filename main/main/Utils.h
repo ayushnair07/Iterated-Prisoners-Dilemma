@@ -6,12 +6,12 @@
 #include "common.h"
 #include <utility>
 
-// Returns the payoff for both players given their moves
-inline std::pair<int, int> payoff(Move a, Move b) {
+
+inline std::pair<int, int> Payoff(Move a, Move b) {
     if (a == Move::C && b == Move::C) return { 3, 3 };
     if (a == Move::C && b == Move::D) return { 0, 5 };
     if (a == Move::D && b == Move::C) return { 5, 0 };
-    return { 1, 1 }; // D,D
+    return { 1, 1 };
 }
 
 #endif

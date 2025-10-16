@@ -8,7 +8,7 @@
 
 using namespace std;
 
-vector<string> split(const string& s, char delimiter) {
+vector<string> Split(const string& s, char delimiter) {
     vector<string> tokens;
     string token;
     istringstream tokenStream(s);
@@ -18,7 +18,7 @@ vector<string> split(const string& s, char delimiter) {
     return tokens;
 }
 
-Config parse_cli(int argc, char* argv[]) {
+Config Parse_CLI(int argc, char* argv[]) {
     Config cfg;
     cfg.strategies = { "ALLC", "ALLD", "TFT", "GRIM", "PAVLOV" };
     for (int i = 1; i < argc; ++i) {
@@ -28,7 +28,7 @@ Config parse_cli(int argc, char* argv[]) {
         else if (arg == "--epsilon" && i + 1 < argc) cfg.epsilon = stod(argv[++i]);
         else if (arg == "--seed" && i + 1 < argc) cfg.seed = stoul(argv[++i]);
         else if (arg == "--payoffs" && i + 1 < argc) {
-            auto p = split(argv[++i], ',');
+            auto p = Split(argv[++i], ',');
             if (p.size() == 4) {
                 cfg.payoffs.T_temptation = stod(p[0]);
                 cfg.payoffs.R_reward = stod(p[1]);
@@ -36,7 +36,7 @@ Config parse_cli(int argc, char* argv[]) {
                 cfg.payoffs.S_sucker = stod(p[3]);
             }
         }
-        else if (arg == "--strategies" && i + 1 < argc) cfg.strategies = split(argv[++i], ',');
+        else if (arg == "--strategies" && i + 1 < argc) cfg.strategies = Split(argv[++i], ',');
         else if (arg == "--format" && i + 1 < argc) cfg.format = argv[++i];
         else if (arg == "--evolve") cfg.evolve = true;
         else if (arg == "--population" && i + 1 < argc) cfg.population = stoi(argv[++i]);
@@ -47,7 +47,7 @@ Config parse_cli(int argc, char* argv[]) {
     return cfg;
 }
 
-void print_leaderboard(const vector<StrategyResult>& results) {
+void Print_Leaderboard(const vector<StrategyResult>& results) {
     auto sorted_results = results;
     sort(sorted_results.begin(), sorted_results.end(), [](const auto& a, const auto& b) {
         return a.mean_score > b.mean_score;
@@ -67,7 +67,7 @@ void print_leaderboard(const vector<StrategyResult>& results) {
     }
 }
 
-void print_evolution(const vector<vector<StrategyResult>>& history) {
+void Print_Evolution(const vector<vector<StrategyResult>>& history) {
     cout << "--- Evolutionary Dynamics ---" << endl;
     for (size_t gen = 0; gen < history.size(); ++gen) {
         cout << "Generation " << gen + 1 << ": ";
@@ -80,19 +80,19 @@ void print_evolution(const vector<vector<StrategyResult>>& history) {
     }
 }
 
-// Main function
+
 int main(int argc, char* argv[]) {
     try {
-        Config cfg = parse_cli(argc, argv);
+        Config cfg = Parse_CLI(argc, argv);
         Engine engine(cfg);
 
         if (cfg.evolve) {
-            auto history = engine.run_evolution();
-            print_evolution(history);
+            auto history = engine.RunEvolution();
+            Print_Evolution(history);
         }
         else {
-            auto results = engine.run_tournament();
-            print_leaderboard(results);
+            auto results = engine.RunTournament();
+            Print_Leaderboard(results);
         }
     }
     catch (const exception& e) {

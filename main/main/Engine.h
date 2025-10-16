@@ -1,10 +1,8 @@
 #pragma once
-// Engine.h
 #pragma once
 #include "Strategy.h"
 #include <map>
 
-// Configuration struct to hold all CLI parameters
 struct Config {
     int rounds = 100, repeats = 10, population = 50, generations = 50;
     unsigned int seed = 0;
@@ -24,7 +22,7 @@ private:
 public:
     Engine(const Config& cfg);
 
-    std::vector<StrategyResult> run_tournament();
+    std::vector<StrategyResult> RunTournament();
 
-    std::vector<std::vector<StrategyResult>> run_evolution();
+    std::vector<std::vector<StrategyResult>> RunEvolution();
 };
